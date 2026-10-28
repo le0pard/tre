@@ -1389,6 +1389,18 @@ main(int argc, char **argv)
   test_comp("a(\\b|$)", REG_EXTENDED, 0);
   test_exec("a b", 0, REG_OK, 0, 1, 1, 1, END);
   test_exec("a", REG_NOTEOL, REG_OK, 0, 1, 1, 1, END);
+  test_comp("x(^|$)", REG_EXTENDED, 0);
+  test_exec("x", 0, REG_OK, 0, 1, 1, 1, END);
+  test_exec("x", REG_NOTEOL, REG_NOMATCH);
+  test_exec("xy", 0, REG_NOMATCH);
+  test_comp("x(^|$)", REG_EXTENDED | REG_NEWLINE, 0);
+  test_exec("x\nx", 0, REG_OK, 0, 1, 1, 1, END);
+  test_comp("(^|\\b)word", REG_EXTENDED, 0);
+  test_exec("a word", 0, REG_OK, 2, 6, 2, 2, END);
+  test_exec("aword", 0, REG_NOMATCH);
+  test_comp("(^|\\b)a (^|\\b)b (^|\\b)c (^|\\b)d", REG_EXTENDED, 0);
+  test_exec("a b c d", 0, REG_OK, 0, 7, 0, 0, 2, 2, 4, 4, 6, 6, END);
+  test_exec("xa b c d", 0, REG_NOMATCH);
 
   /* Groups that can only match the empty string share their tags, so every
      such group in an alternation reports the same empty span, as for
